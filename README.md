@@ -1,2 +1,3 @@
 # CardMatchingGame
-Cosmic project 2/1
+Comsci project ปี2/1
+6821601402 วรชิต วสุธนพิริยะ รับผิดชอบ :
