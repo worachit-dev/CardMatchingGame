@@ -1,3 +1,5 @@
+package gui; // 1. ต้องบอกว่าไฟล์นี้อยู่แพ็กเกจไหน
+import game.GameManager; // 2. ต้องนำเข้าคลาส GameManager จากแพ็กเกจ game มาใช้งาน
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,7 +32,7 @@ public class GameFrame extends JFrame {
             buttons[i] = new JButton();
 
             buttons[i].setIcon(
-                new ImageIcon("images/back.png")
+                new ImageIcon("resources/back.png")
             );
 
             panel.add(buttons[i]);

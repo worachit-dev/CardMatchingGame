@@ -1,3 +1,4 @@
+package model;
 public class Card {
     private String image;
     private boolean revealed;

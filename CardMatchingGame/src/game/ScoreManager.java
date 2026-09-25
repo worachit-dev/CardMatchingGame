@@ -1,3 +1,4 @@
+package game;
 public class ScoreManager {
     private int score;
     private int highScore;
