@@ -1,17 +1,19 @@
-package model;
+
+package model; //1. ต้องบอกว่าไฟล์นี้อยู่แพ็กเกจไหน
+
 public class Card {
-    private String image;
+    private String imageId;
     private boolean revealed;
     private boolean matched;
 
-    public Card(String image){
-        this.image = image ;
+    public Card(String imageId){
+        this.imageId = imageId ;
         this.revealed = false;
         this.matched = false;
     }
 
     public String getImage(){
-        return image;
+        return imageId;
     }
 
     public boolean isRevealed(){
@@ -28,5 +30,16 @@ public class Card {
 
     public void setMatched(boolean matched){
         this.matched = matched;
+    }
+
+    public void hide() {
+        if (!matched) {
+            revealed = false;
+        }
+    }
+
+    public void setMatched() {
+        matched = true;
+        revealed = true;
     }
 }

@@ -1,7 +1,11 @@
-import gui.MainMenu; // ต้องนำเข้าคลาส MainMenu จากแพ็กเกจ gui มาใช้งาน
+import gui.MainFrame;// ต้องนำเข้าคลาส MainFrame จากแพ็กเกจ gui มาใช้งาน
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        new MainMenu();
+         SwingUtilities.invokeLater(() -> {
+            MainFrame frame = new MainFrame();
+            frame.setVisible(true);
+        });
     }
 }
