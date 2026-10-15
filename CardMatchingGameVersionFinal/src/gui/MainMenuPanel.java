@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class MainMenuPanel extends JPanel {
 
-    private Image backgroundImage;
+    private Image backgroundImage; 
 
     public MainMenuPanel(MainFrame mainFrame) {
 
@@ -13,8 +13,9 @@ public class MainMenuPanel extends JPanel {
                 new ImageIcon("resources/picture/newBG.png")
                         .getImage();
 
-        setLayout(new GridBagLayout());
+        setLayout(new GridBagLayout()); // จัดเลย์เอาต์หลักให้อยู่กึ่งกลางหน้าจอ
 
+        // รวบรวมปุ่มและหัวข้อเมนูเข้าด้วยกันในแนวตั้ง
         JPanel menuPanel = new JPanel();
 
         menuPanel.setLayout(
@@ -26,15 +27,15 @@ public class MainMenuPanel extends JPanel {
 
         menuPanel.setOpaque(false);
 
-        // =========================
+        // =====
         // TITLE
-        // =========================
+        // =====
 
         JLabel titleLabel =
                 new JLabel("CARD MATCHING");
 
         titleLabel.setFont(
-                loadGameFont(64)
+                loadGameFont(64) 
         );
 
         titleLabel.setForeground(
@@ -45,9 +46,9 @@ public class MainMenuPanel extends JPanel {
                 Component.CENTER_ALIGNMENT
         );
 
-        // =========================
+        // =======
         // BUTTONS
-        // =========================
+        // =======
 
         JButton startButton =
                 createMenuButton("START GAME");
@@ -58,9 +59,9 @@ public class MainMenuPanel extends JPanel {
         JButton exitButton =
                 createMenuButton("EXIT");
 
-        // =========================
+        // =======
         // ACTIONS
-        // =========================
+        // =======
 
         startButton.addActionListener(e -> {
             mainFrame.showSetup();
@@ -90,37 +91,28 @@ public class MainMenuPanel extends JPanel {
             System.exit(0);
         });
 
-        // =========================
+        // ======
         // LAYOUT
-        // =========================
+        // ======
 
         menuPanel.add(titleLabel);
-
-        menuPanel.add(
-                Box.createVerticalStrut(30)
-        );
-
+        menuPanel.add(Box.createVerticalStrut(30));
         menuPanel.add(startButton);
-
-        menuPanel.add(
-                Box.createVerticalStrut(15)
-        );
-
+        menuPanel.add(Box.createVerticalStrut(15));
         menuPanel.add(howToPlayButton);
-
-        menuPanel.add(
-                Box.createVerticalStrut(15)
-        );
-
+        menuPanel.add(Box.createVerticalStrut(15));
         menuPanel.add(exitButton);
 
         add(menuPanel);
     }
 
-    // =========================
+    // =============
     // CREATE BUTTON
-    // =========================
+    // =============
 
+    // Medthod
+
+    // ช่วยสร้างปุ่มเมนูหลัก start,howto,exit ให้เหมือนกัน
     private JButton createMenuButton(String text) {
 
         JButton button = new JButton(text);
@@ -136,7 +128,7 @@ public class MainMenuPanel extends JPanel {
         button.setForeground(Color.WHITE);
 
         button.setBackground(
-                new Color(80, 55, 40)
+                new Color(80, 55, 40) 
         );
 
         button.setFocusPainted(false);
@@ -156,10 +148,11 @@ public class MainMenuPanel extends JPanel {
         return button;
     }
 
-    // =========================
+    // ==========
     // GAME FONT
-    // =========================
+    // ==========
 
+    // โหลดฟอนต์พิเศษของเกม
     private Font loadGameFont(float size) {
 
         try {
@@ -184,10 +177,11 @@ public class MainMenuPanel extends JPanel {
         }
     }
 
-    // =========================
+    // ==========
     // BACKGROUND
-    // =========================
+    // ==========
 
+    // วาดภาพพื้นหลังลงบนพาเนลให้เต็มขนาดหน้าจอพอดี
     @Override
     protected void paintComponent(Graphics g) {
 

@@ -1,46 +1,42 @@
-package gui;
+package gui; 
 
-import javax.swing.*;
+import javax.swing.*; 
+import model.CardSetType; 
+import java.awt.*; 
 
-import model.CardSetType;
+public class GameSetupPanel extends JPanel { 
 
-import java.awt.*;
+    private final MainFrame mainFrame; 
 
-public class GameSetupPanel extends JPanel {
+    private JButton fruitsButton; 
+    private JButton animalButton; 
 
-    private final MainFrame mainFrame;
+    private JButton normalButton; // 4x4
+    private JButton hardButton; // 5x6
 
-    private JButton fruitsButton;
-    private JButton animalButton;
-
-    private JButton normalButton;
-    private JButton hardButton;
-
-    // เก็บค่าที่ผู้เล่นเลือก (ค่าเริ่มต้น FRUITS / NORMAL)
+    // เก็บค่าที่ผู้เล่นเลือก(ค่าเริ่มต้นเป็น FRUITS และ NORMAL)
     private CardSetType selectedType = CardSetType.FRUITS;
     private boolean hardMode = false;
  
-    // สีปุ่มปกติ / สีปุ่มที่ถูกเลือก
+    // สีของปุ่มในสถานะปกติ และสีของปุ่มเมื่อถูกเลือก
     private static final Color NORMAL_COLOR = new Color(120, 85, 60);
     private static final Color SELECTED_COLOR = new Color(200, 120, 40);
 
+    //     Constructer   
+    // สร้างหน้าจอตั้งค่าเกมโดยรับ MainFrame เข้ามา
     public GameSetupPanel(MainFrame mainFrame) {
 
-        this.mainFrame = mainFrame;
+        this.mainFrame = mainFrame; 
 
-        setLayout(new GridBagLayout());
-
+        setLayout(new GridBagLayout()); 
         GridBagConstraints gbc =
-                new GridBagConstraints();
-
+                new GridBagConstraints();                
         gbc.insets =
-                new Insets(10, 10, 10, 10);
-
+                new Insets(10, 10, 10, 10); // กำหนดระยะห่างรอบคอมโพเนนต์
         gbc.fill =
                 GridBagConstraints.HORIZONTAL;
-
         // =========================
-        // Main Container
+        // Main Container 
         // =========================
 
         JPanel panel = new JPanel();
@@ -48,53 +44,39 @@ public class GameSetupPanel extends JPanel {
         panel.setLayout(
                 new BoxLayout(
                         panel,
-                        BoxLayout.Y_AXIS
+                        BoxLayout.Y_AXIS // จัดเรียงคอมโพเนนต์ภายในแบบแนวตั้ง
                 )
         );
 
         panel.setOpaque(false);
 
-        // =========================
-        // Title
-        // =========================
+        // =====
+        // Title 
+        // =====
 
-        JLabel title =
-                new JLabel("CARD MATCHING");
+        JLabel title = new JLabel("CARD MATCHING");
 
-        title.setFont(
-                FontManager.getFont(40)
-        );
+        title.setFont(FontManager.getFont(40));
 
-        title.setForeground(
-                new Color(70, 45, 30)
-        );
+        title.setForeground( new Color(70, 45, 30)); 
 
-        title.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
+        title.setAlignmentX(Component.CENTER_ALIGNMENT); 
 
-        // =========================
-        // Theme Label
-        // =========================
+        // ===========
+        // Theme Label 
+        // ===========
 
-        JLabel themeLabel =
-                new JLabel("CHOOSE CARD THEME");
+        JLabel themeLabel = new JLabel("CHOOSE CARD THEME");
 
-        themeLabel.setFont(
-                FontManager.getFont(22)
-        );
+        themeLabel.setFont(FontManager.getFont(22));
 
-        themeLabel.setForeground(
-                new Color(70, 45, 30)
-        );
+        themeLabel.setForeground(new Color(70, 45, 30));
 
-        themeLabel.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
+        themeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // =========================
-        // Theme Buttons
-        // =========================
+        // ==============
+        // Theme Buttons 
+        // ==============
 
         JPanel themePanel =
                 new JPanel(
@@ -108,11 +90,12 @@ public class GameSetupPanel extends JPanel {
         themePanel.setOpaque(false);
 
         fruitsButton =
-                createOptionButton("FRUITS");
+                createOptionButton("FRUITS"); 
 
         animalButton =
-                createOptionButton("ANIMAL");
+                createOptionButton("ANIMAL"); 
 
+        // ให้เปลี่ยนสถานะและสีปุ่ม
         fruitsButton.addActionListener(e -> {
             selectedType = CardSetType.FRUITS;
             updateButtonColors();
@@ -123,12 +106,12 @@ public class GameSetupPanel extends JPanel {
             updateButtonColors();
         });
 
-        themePanel.add(fruitsButton);
-        themePanel.add(animalButton);
+        themePanel.add(fruitsButton); 
+        themePanel.add(animalButton); 
 
-        // =========================
-        // Difficulty Label
-        // =========================
+        // =================
+        // Difficulty Label 
+        // =================
 
         JLabel difficultyLabel =
                 new JLabel("CHOOSE DIFFICULTY");
@@ -145,9 +128,9 @@ public class GameSetupPanel extends JPanel {
                 Component.CENTER_ALIGNMENT
         );
 
-        // =========================
+        // ==================
         // Difficulty Buttons
-        // =========================
+        // ==================
 
         JPanel difficultyPanel =
                 new JPanel(
@@ -160,11 +143,13 @@ public class GameSetupPanel extends JPanel {
 
         difficultyPanel.setOpaque(false);
 
+        // สร้างปุ่มโหมดปกติ 
         normalButton =
                 createOptionButton(
                         "<html><center>NORMAL<br>4 × 4</center></html>"
                 );
 
+        // สร้างปุ่มโหมดhard
         hardButton =
                 createOptionButton(
                         "<html><center>HARD<br>5 × 6</center></html>"
@@ -180,16 +165,17 @@ public class GameSetupPanel extends JPanel {
                 updateButtonColors();
         });
 
-        difficultyPanel.add(normalButton);
-        difficultyPanel.add(hardButton);
+        difficultyPanel.add(normalButton); 
+        difficultyPanel.add(hardButton); 
 
-        // =========================
+        // ============
         // Start Button
-        // =========================
+        // ============
 
         JButton startButton =
                 createMainButton("START GAME");
 
+        // เมื่อคลิกปุ่ม Start จะคำนวณขนาดแถวและคอลัมน์ตามโหมดที่เลือก
         startButton.addActionListener(e -> {
 
         int rows;
@@ -204,33 +190,33 @@ public class GameSetupPanel extends JPanel {
 
                 mainFrame.showGame(selectedType, rows, cols);
         });
-        // =========================
-        // Leaderboard Button (สร้าง Action ตรงนี้)
-        // =========================
+
+        // ==================
+        // Leaderboard Button
+        // ==================
         JButton leaderboardButton =
                 createMainButton("LEADBOARD");
 
+        // เมื่อคลิกจะเปิดหน้าต่าง LeaderboardDialog ขึ้นมา
         leaderboardButton.addActionListener(e -> {
             LeaderboardDialog dialog = new LeaderboardDialog((JFrame) SwingUtilities.getWindowAncestor(this));
             dialog.setVisible(true);
         });
             
-        // =========================
-        // Back Button
-        // =========================
+        // ===========
+        // Back Button 
+        // ===========
 
         JButton backButton =
                 createMainButton("BACK TO MENU");
 
         backButton.addActionListener(e -> {
-
             mainFrame.showMenu();
-
         });
 
-        // =========================
-        // Add Everything
-        // =========================
+        // ======================================================================
+        // Add Everything (รวบรวมคอมโพเนนต์ทั้งหมดใส่ลงใน panel หลักพร้อมกำหนดระยะห่าง)
+        // ======================================================================
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(30));
@@ -250,14 +236,14 @@ public class GameSetupPanel extends JPanel {
         panel.add(startButton);
         panel.add(Box.createVerticalStrut(10));
 
-        panel.add(leaderboardButton); // <-- วางไว้ตรงกลางระหว่าง Start และ Back
+        panel.add(leaderboardButton);
         panel.add(Box.createVerticalStrut(10));
 
         panel.add(backButton);
 
-        // =========================
-        // Put panel in center
-        // =========================
+        // ===================================================
+        // Put panel in center (นำ panel หลักไปวางตรงกลางหน้าจอ)
+        // ===================================================
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -265,6 +251,7 @@ public class GameSetupPanel extends JPanel {
         add(panel, gbc);
     }
 
+    // อัปเดตสีของปุ่มตามสถานะที่ถูกเลือกปัจจุบัน
     private void updateButtonColors() {
  
         fruitsButton.setBackground(
@@ -281,7 +268,7 @@ public class GameSetupPanel extends JPanel {
     }
 
     // ==================================================
-    // Option Button
+    // Option Button (เมธอดช่วยสร้างปุ่มตัวเลือกธีมและระดับความยาก)
     // ==================================================
 
     private JButton createOptionButton(
@@ -303,20 +290,20 @@ public class GameSetupPanel extends JPanel {
                 new Color(120, 85, 60)
         );
 
-        button.setFocusPainted(false);
+        button.setFocusPainted(false); 
 
-        button.setBorderPainted(false);
+        button.setBorderPainted(false); 
 
         button.setPreferredSize(
-                new Dimension(150, 60)
+                new Dimension(150, 60) 
         );
 
         return button;
     }
 
-    // ==================================================
-    // Main Button
-    // ==================================================
+    // ==============================================
+    // Main Button ปุ่มหลัก = Start, Leaderboard, Back
+    // ==============================================
 
     private JButton createMainButton(
             String text
@@ -346,10 +333,9 @@ public class GameSetupPanel extends JPanel {
         );
 
         button.setMaximumSize(
-                new Dimension(260, 50)
+                new Dimension(260, 50) // กำหนดขนาดสูงสุดของปุ่มหลัก
         );
 
         return button;
     }
-    
 }

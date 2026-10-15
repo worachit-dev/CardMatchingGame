@@ -11,7 +11,8 @@ public class SignUpPanel extends JPanel {
 
     private final MainFrame mainFrame;
     private final UserManager userManager;
-
+    // Constructer
+    // สร้างหน้าจอสมัครสมาชิก โดยรับ MainFrame และ UserManager เข้ามาใช้งานร่วมกัน
     public SignUpPanel(MainFrame mainFrame, UserManager userManager) {
 
         this.mainFrame = mainFrame;
@@ -20,10 +21,6 @@ public class SignUpPanel extends JPanel {
         setLayout(new GridBagLayout());
 
         setOpaque(false);
-
-        // =========================
-        // MAIN PANEL
-        // =========================
 
         JPanel signUpPanel = new JPanel();
 
@@ -35,10 +32,6 @@ public class SignUpPanel extends JPanel {
         );
 
         signUpPanel.setOpaque(false);
-
-        // =========================
-        // TITLE
-        // =========================
 
         JLabel titleLabel =
                 new JLabel("SIGN UP");
@@ -54,10 +47,6 @@ public class SignUpPanel extends JPanel {
         titleLabel.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
-
-        // =========================
-        // USERNAME
-        // =========================
 
         JLabel usernameLabel =
                 new JLabel("USERNAME");
@@ -85,7 +74,7 @@ public class SignUpPanel extends JPanel {
                 new Dimension(300, 30)
         );
 
-        // จำกัดให้พิมพ์ได้แค่ตัวอักษร a-z, A-Z และตัวเลข 0-9 เท่านั้น ห้ามอักขระพิเศษ
+        // อนุญาตให้พิมพ์เฉพาะตัวอักษรภาษาอังกฤษ (a-z, A-Z) และตัวเลข (0-9) เท่านั้น
         usernameField.addKeyListener(new KeyAdapter() {
 
             @Override
@@ -94,14 +83,10 @@ public class SignUpPanel extends JPanel {
                 char c = e.getKeyChar();
 
                 if (!Character.isLetterOrDigit(c) && !Character.isISOControl(c)) {
-                    e.consume();
+                    e.consume(); // ตัดอักขระพิเศษทิ้งทันที
                 }
             }
         });
-
-        // =========================
-        // PASSWORD
-        // =========================
 
         JLabel passwordLabel =
                 new JLabel("PASSWORD");
@@ -125,7 +110,7 @@ public class SignUpPanel extends JPanel {
                 new Dimension(300, 30)
         );
 
-
+        // ช่องรหัสผ่านจำกัดให้พิมพ์เฉพาะภาษาอังกฤษและตัวเลข
         passwordField.addKeyListener(new KeyAdapter() {
 
             @Override
@@ -138,10 +123,6 @@ public class SignUpPanel extends JPanel {
                 }
             }
         });
-
-        // =========================
-        // CONFIRM PASSWORD
-        // =========================
 
         JLabel confirmPasswordLabel =
                 new JLabel("CONFIRM PASSWORD");
@@ -166,8 +147,7 @@ public class SignUpPanel extends JPanel {
                 new Dimension(300, 30)
         );
 
-
-        // จำกัดให้พิมพ์ได้แค่ตัวอักษร a-z, A-Z และตัวเลข 0-9 เท่านั้น ห้ามอักขระพิเศษ
+        // ช่องยืนยันรหัสผ่านก็จำกัดรูปแบบตัวอักษร
         confirmPasswordField.addKeyListener(new KeyAdapter() {
 
             @Override
@@ -180,10 +160,6 @@ public class SignUpPanel extends JPanel {
                 }
             }
         });
-
-        // =========================
-        // ERROR MESSAGE
-        // =========================
 
         JLabel errorLabel = new JLabel(" ");
 
@@ -198,10 +174,6 @@ public class SignUpPanel extends JPanel {
         errorLabel.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
-
-        // =========================
-        // SIGN UP BUTTON
-        // =========================
 
         JButton signUpButton =
                 new JButton("SIGN UP");
@@ -232,17 +204,14 @@ public class SignUpPanel extends JPanel {
                 new Dimension(300, 50)
         );
 
-        // =========================
-        // SIGN UP ACTION
-        // =========================
-
-        // ตรวจรูปแบบ + รหัสผ่านตรงกัน + ชื่อไม่ซ้ำ 
+        // ปุ่มกดสมัครสมาชิก มีการตรวจสอบความถูกต้องก่อนบันทึกข้อมูล
         signUpButton.addActionListener(e -> {
 
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword());
             String confirm = new String(confirmPasswordField.getPassword());
 
+            // เช็คว่ากรอกข้อมูลครบทุกช่องหรือยัง
             if (username.length() == 0 || password.length() == 0 || confirm.length() == 0) {
                 JOptionPane.showMessageDialog(
                 this,
@@ -252,6 +221,7 @@ public class SignUpPanel extends JPanel {
                 return;
             }
 
+            // ตรวจสอบรูปแบบตัวอักษรว่าถูกต้องตามเงื่อนไขไหม
             if (!userManager.isValidFormat(username) || !userManager.isValidFormat(password)) {
                 JOptionPane.showMessageDialog(
                 this,
@@ -261,6 +231,7 @@ public class SignUpPanel extends JPanel {
                 return;
             }
 
+            // เช็คว่ารหัสผ่านทั้งสองช่องตรงกันไหม
             if (!password.equals(confirm)) {
                 JOptionPane.showMessageDialog(
                 this,
@@ -270,6 +241,7 @@ public class SignUpPanel extends JPanel {
                 return;
             }
 
+            // เช็คว่าชื่อผู้ใช้นี้ถูกคนอื่นสมัครไปแล้วหรือยัง
             if (userManager.isUsernameTaken(username)) {
                 JOptionPane.showMessageDialog(
                 this,
@@ -279,12 +251,13 @@ public class SignUpPanel extends JPanel {
                 return;
             }
 
+            // สั่งบันทึกข้อมูลผู้ใช้ใหม่ผ่านระบบ UserManager
             boolean success = userManager.register(username, password);
 
             if (success) {
-
                 errorLabel.setText(" ");
 
+                // ถ้าสมัครสำเร็จ แจ้งเตือนแล้วพาผู้เล่นกลับไปหน้า Login
                 JOptionPane.showMessageDialog(
                         this,
                         "Sign up succeses Please Login",
@@ -308,14 +281,10 @@ public class SignUpPanel extends JPanel {
             }
         });
 
-        // =========================
-        // LOGIN LINK
-        // =========================
-
         JLabel loginLabel =
                 new JLabel(
                         "<html>You have an account? "
-                        + "<u>LOGIN</u></html>"
+                        + "<b><u>LOGIN</u></b></html>"
                 );
 
         loginLabel.setFont(
@@ -334,10 +303,7 @@ public class SignUpPanel extends JPanel {
                 new Cursor(Cursor.HAND_CURSOR)
         );
 
-        // =========================
-        // LOGIN ACTION
-        // =========================
-
+        // คลิกที่ข้อความ Login เพื่อสลับกลับไปหน้าจอเข้าสู่ระบบ
         loginLabel.addMouseListener(
                 new java.awt.event.MouseAdapter() {
 
@@ -350,64 +316,24 @@ public class SignUpPanel extends JPanel {
                 }
         );
 
-        // =========================
-        // ADD COMPONENTS
-        // =========================
-
         signUpPanel.add(titleLabel);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(25)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(25));
         signUpPanel.add(usernameLabel);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(5)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(5));
         signUpPanel.add(usernameField);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(12)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(12));
         signUpPanel.add(passwordLabel);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(5)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(5));
         signUpPanel.add(passwordField);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(12)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(12));
         signUpPanel.add(confirmPasswordLabel);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(5)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(5));
         signUpPanel.add(confirmPasswordField);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(10)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(10));
         signUpPanel.add(errorLabel);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(10)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(10));
         signUpPanel.add(signUpButton);
-
-        signUpPanel.add(
-                Box.createVerticalStrut(15)
-        );
-
+        signUpPanel.add(Box.createVerticalStrut(15));
         signUpPanel.add(loginLabel);
 
         add(signUpPanel);
