@@ -1,38 +1,39 @@
 package game;
-import model.CardSet; //เรียกใช้งาน CardSet จากโฟลเดอร์ model
-import model.CardSetType;
-
+import model.CardSet; 
+import model.CardSetType; 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CardSetManager {
 
-    private final List<CardSet> cardSets;
+    private final List<CardSet> cardSets; // ลิสต์เก็บรายการชุดการ์ดทั้งหมดที่มีในระบบ
+    private CardSet currentSet; // ชุดการ์ดที่กำลังถูกใช้งานอยู่ในเกมปัจจุบัน
 
-    private CardSet currentSet;
-
+    // Constructer
+    // เตรียมข้อมูลชุดการ์ดเริ่มต้น
     public CardSetManager() {
  
         cardSets = new ArrayList<>();
  
-        cardSets.add(createAnimalsSet());
-        cardSets.add(createFruitsSet());
-        //cardSets.add(createNumbersSet());
+        cardSets.add(createAnimalsSet()); 
+        cardSets.add(createFruitsSet()); 
     }
 
+    // Medthod
+    // ค้นหาและดึงชุดการ์ดตามประเภทที่เลือก เช่น FRUITS หรือ ANIMALS
     public CardSet getSet(CardSetType type) {
 
-    for (CardSet set : cardSets) {
-        if (set.getType() == type) {
-            currentSet = set;
-            return set;
+        for (CardSet set : cardSets) {
+            if (set.getType() == type) {
+                currentSet = set; // บันทึกเก็บไว้เป็นชุดปัจจุบัน
+                return set;
+            }
         }
+
+        return null; 
     }
 
-    return null;
-    }
-
+    // ดึงชุดการ์ดปัจจุบันที่กำลังเล่นอยู่
     public CardSet getCurrentSet() {
         return currentSet;
     }
@@ -62,8 +63,4 @@ public class CardSetManager {
             images
         );
     }
-
- }
-
-
-
+}

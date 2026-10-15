@@ -2,31 +2,30 @@ package game;
 
 import model.*;
 
-
 public class GameManager {
 
+    // กำหนดสถานะผลลัพธ์ของการคลิกการ์ดแต่ละครั้ง
     public enum ClickResult {
-        IGNORED,
+        IGNORED,   
         FIRST_SELECTED,
         MATCH,
-        MISMATCH
+        MISMATCH  
     }
 
-    private static final int TIME_PENALTY = 10; // วินาทีที่บวกเพิ่มเมื่อจับคู่ผิด
-
+    private static final int TIME_PENALTY = 10; // เวลา + 10 วิ
     private final GameBoard gameBoard;
     private final CardSetManager cardSetManager;
     private final ScoreManager scoreManager;
 
-    private int firstIndex = -1;
-    private int lastPoints;   // คะแนนที่ได้จากการจับคู่ครั้งล่าสุด
+    private int firstIndex = -1; // เก็บตำแหน่งอินเด็กซ์ของการ์ดใบแรกที่ถูกคลิก
+    private int lastPoints;      // คะแนนล่าสุดจากการเล่น(ในเกม)
     private int combo;
-    private boolean locked;
+    private boolean locked;      // สถานะล็อกกระดานชั่วคราว
 
-    private long startTime;        // เวลาที่เริ่มเกม (มิลลิวินาที)
-    private int penaltySeconds;    // เวลาที่ถูกบวกเพิ่มจากการจับคู่ผิด
-    private boolean running;       // true = กำลังจับเวลาอยู่
-    private int finalSeconds;      // เวลาสุดท้ายตอนเกมจบ
+    private long startTime;        // เวลาเริ่มต้นเล่นเกม
+    private int penaltySeconds;    // จำนวนวินาทีรวมที่โดนบวกเพิ่มจากการจับคู่ผิด
+    private boolean running;       // สถานะการจับเวลา true = กำลังจับเวลาอยู่
+    private int finalSeconds;      // เวลาสุดท้ายตอนที่เกมจบลง
 
     public GameManager() {
         gameBoard = new GameBoard();
@@ -34,15 +33,12 @@ public class GameManager {
         scoreManager = new ScoreManager();
     }
 
-    /** เริ่มเกมใหม่ และเริ่มจับเวลา */
+    // Medthod 
+    // เริ่มเกมใหม่ ตั้งค่ากระดาน คะแนน คอมโบ และเริ่มต้นจับเวลา
     public boolean startNewGame(CardSetType type, int rows, int cols) {
  
         CardSet set = cardSetManager.getSet(type);
-        int pairCount = rows * cols / 2;
- 
-        if (set == null || set.getImages().size() < pairCount) {
-            return false;
-        }
+        int pairCount = rows * cols / 2; // คำนวณจำนวนคู่การ์ดตามขนาดตาราง
  
         gameBoard.createCards(set, pairCount);
         scoreManager.resetScore();
@@ -50,6 +46,7 @@ public class GameManager {
         firstIndex = -1;
         locked = false;
  
+        // เริ่มต้นระบบจับเวลา
         startTime = System.currentTimeMillis();
         penaltySeconds = 0;
         finalSeconds = 0;
@@ -58,43 +55,54 @@ public class GameManager {
         return true;
     }
 
+    // จัดการตรรกะเมื่อผู้เล่นคลิกเลือกการ์ดที่ตำแหน่ง index
     public ClickResult selectCard(int index) {
 
+        // กำลังรอเวลาคว่ำการ์ดที่ผิด จะไม่ยอมให้คลิก
         if (locked) {
             return ClickResult.IGNORED;
         }
 
         Card card = gameBoard.getCard(index);
 
+        // จับคู่แล้วจะทำอะไรไม่ได้
         if (card.isMatched() || card.isRevealed()) {
             return ClickResult.IGNORED;
         }
 
-        card.setRevealed(true);
+        card.setRevealed(true); // เปิดหน้าการ์ด
 
+        // ถ้าเป็นการคลิกเปิดการ์ดใบแรกของตา
         if (firstIndex == -1) {
             firstIndex = index;
             return ClickResult.FIRST_SELECTED;
         }
 
+        // ถ้าเป็นการคลิกเปิดการ์ดใบที่สอง ให้ตรวจสอบว่ารูปตรงกันไหม
         boolean match = gameBoard.checkMatch(firstIndex, index);
 
         if (match) {
+            // กรณีจับคู่สำเร็จ ล็อกการ์ดทั้งสองใบว่าจับคู่แล้ว
             gameBoard.getCard(firstIndex).setMatched();
             gameBoard.getCard(index).setMatched();
-            lastPoints = 1 << Math.min(combo, 20); // 2 ยกกำลัง combo (จำกัดไม่ให้ล้น)
+            
+            // คำนวณคะแนนตามคอมโบ คูณคะแนนตามจำนวนคอมโบ
+            lastPoints = 1 << Math.min(combo, 20); // <--- lastscore ตรงนี้ = คะแนนที่ + 1 ครั้ง ก่อน combo
             scoreManager.addScore(lastPoints);
             scoreManager.checkHighScore();
-            combo++;                                // บวกหลังคำนวณคะแนน
+            combo++;
+            
             return ClickResult.MATCH;
         } else {
-            penaltySeconds += TIME_PENALTY; // จับคู่ผิด บวกเวลาเพิ่ม 10 วินาที
+            // กรณีจับคู่ผิด บวกเวลาโทษ 10 วินาที, รีเซ็ตคอมโบ, และล็อกกระดานชั่วคราว
+            penaltySeconds += TIME_PENALTY;
             combo = 0;
             locked = true;
             return ClickResult.MISMATCH;
         }
     }
 
+    // จัดการเมื่อเปิดการ์ดผิด สั่งคว่ำการ์ดทั้งสองใบกลับด้านหลัง
     public void resolveMismatch(int secondIndex) {
         gameBoard.getCard(firstIndex).setRevealed(false);
         gameBoard.getCard(secondIndex).setRevealed(false);
@@ -102,6 +110,7 @@ public class GameManager {
         locked = false;
     }
 
+    // ล้างค่าตำแหน่งการ์ดใบแรกที่เลือกไว้
     public void clearSelection() {
         firstIndex = -1;
     }
@@ -114,6 +123,7 @@ public class GameManager {
         return lastPoints;
     }
 
+    // เมธอดตรวจสอบว่าผู้เล่นชนะเกมหรือยัง
     public boolean isGameWon() {
         for (Card c : gameBoard.getCards()) {
             if (!c.isMatched()) {
@@ -123,11 +133,11 @@ public class GameManager {
         return true;
     }
 
-    // =========================
-    // TIMER
-    // =========================
+    // ====================
+    // TIMER (ระบบจัดการเวลา)
+    // ====================
 
-    /** เวลาที่ใช้ไปทั้งหมด (วินาที) = เวลาจริง + เวลาที่ถูกบวกเพิ่ม */
+    // คำนวณเวลาที่ใช้ไปทั้งหมด(เวลาจริง + เวลาที่ถูกบวกโทษจากการเปิดผิด)
     public int getElapsedSeconds() {
         if (!running) {
             return finalSeconds;
@@ -136,7 +146,7 @@ public class GameManager {
         return realSeconds + penaltySeconds;
     }
 
-    /** หยุดจับเวลา (เรียกตอนเกมจบ) */
+    // หยุดจับเวลา เรียกใช้งานเมื่อเกมจบลง
     public void stopTimer() {
         if (running) {
             finalSeconds = getElapsedSeconds();
