@@ -14,6 +14,7 @@ public class GamePanel extends JPanel {
     private final JLabel timeLabel;
     private final JLabel scoreLabel;
     private final JLabel comboLabel;
+    private final JLabel missLabel;
 
     private final JPanel boardPanel;      // จัดวางปุ่มการ์ดบนกระดาน
     private CardButton[] cardButtons;     // เก็บปุ่มการ์ดทั้งหมดในเกม
@@ -76,6 +77,7 @@ public class GamePanel extends JPanel {
 
         scoreLabel = new JLabel();
         comboLabel = new JLabel();
+        missLabel = new JLabel();
 
         scoreLabel.setFont(
                 FontManager.getFont(18) 
@@ -84,9 +86,13 @@ public class GamePanel extends JPanel {
         comboLabel.setFont(
                 FontManager.getFont(18) 
         );
+        missLabel.setFont(
+                FontManager.getFont(18) 
+        );
 
         scorePanel.add(scoreLabel); 
         scorePanel.add(comboLabel); 
+        scorePanel.add(missLabel); 
 
         // =========================
         // CARD BOARD (กระดานการ์ด)
@@ -252,6 +258,7 @@ public class GamePanel extends JPanel {
 
                 revealCard(index); // เปิดภาพการ์ดใบที่สองให้ผู้เล่นเห็นชั่วครู่
                 updateLabels(); // บวกเวลาเพิ่ม 10 วินาทีกรณีจับคู่ผิด
+                checkGameOver();
 
                 // สร้าง Timer หน่วงเวลา เพื่อแสดงการ์ดค้างไว้ก่อนจะคว่ำกลับลงไป
                 Timer timer = new Timer(MISMATCH_DELAY_MS, e -> {
@@ -288,7 +295,21 @@ public class GamePanel extends JPanel {
     private void updateLabels() {
         scoreLabel.setText("SCORE: " + gameManager.getScoreManager().getScore()); // ดึงคะแนนปัจจุบันมาแสดง
         comboLabel.setText("COMBO: " + gameManager.getCombo()); // ดึงคอมโบปัจจุบันมาแสดง
+        missLabel.setText("MISS: " + gameManager.getMiss()); // ดึงคอมโบปัจจุบันมาแสดง
         updateTimeLabel(); // อัปเดตเวลา
+    }
+
+    private void checkGameOver(){
+        if(gameManager.getMiss()==10){
+            gameTimer.stop();
+        mainFrame.showMenu();
+        JOptionPane.showMessageDialog(
+                    this,
+                    "GameOver AutoReturnMenu",
+                    "GameOver",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+        }; 
     }
 
     // ตรวจสอบว่าเกมจบหรือยัง

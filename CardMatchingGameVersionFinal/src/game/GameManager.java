@@ -20,6 +20,7 @@ public class GameManager {
     private int firstIndex = -1; // เก็บตำแหน่งอินเด็กซ์ของการ์ดใบแรกที่ถูกคลิก
     private int lastPoints;      // คะแนนล่าสุดจากการเล่น(ในเกม)
     private int combo;
+    private int miss;
     private boolean locked;      // สถานะล็อกกระดานชั่วคราว
 
     private long startTime;        // เวลาเริ่มต้นเล่นเกม
@@ -43,6 +44,7 @@ public class GameManager {
         gameBoard.createCards(set, pairCount);
         scoreManager.resetScore();
         combo = 0;
+        miss = 0;
         firstIndex = -1;
         locked = false;
  
@@ -97,6 +99,7 @@ public class GameManager {
             // กรณีจับคู่ผิด บวกเวลาโทษ 10 วินาที, รีเซ็ตคอมโบ, และล็อกกระดานชั่วคราว
             penaltySeconds += TIME_PENALTY;
             combo = 0;
+            miss++;
             locked = true;
             return ClickResult.MISMATCH;
         }
@@ -168,5 +171,8 @@ public class GameManager {
 
     public int getCombo() {
         return combo;
+    }
+    public int getMiss() {
+        return miss;
     }
 }

@@ -113,6 +113,10 @@ public class MainFrame extends JFrame {
         showGame(lastType, lastRows, lastCols);
     }
 
+    public void GameOver(){
+        showMenu();
+    }
+
     public void showResult(int score, int timeSeconds, String mode) {
     // ถ้าเคยมีหน้าจอผลลัพธ์เก่าค้างอยู่ ให้ลบออกก่อน เพื่อจะได้สร้างใหม่และอัปเดตคะแนนล่าสุด
     if (resultPanel != null) {
